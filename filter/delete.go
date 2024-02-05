@@ -7,10 +7,10 @@ func RemoveItemsFromListByCondition[T any](l *[]T, checkRemoving func(item T) bo
 	f := false
 	for _, item := range *l {
 		if checkRemoving(item) {
+			f = true
 			continue
 		}
 		newList = append(newList, item)
-		f = true
 	}
 	*l = newList
 	if !f {
