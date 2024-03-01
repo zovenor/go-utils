@@ -2,20 +2,20 @@ package filter
 
 import "fmt"
 
-func RemoveItemsFromListByCondition[T any](l *[]T, checkRemoving func(item T) bool) error {
+func RemoveItemsFromListByCondition[T any](l *[]T, checkRemoving func(item T) bool) ([]T, error) {
 	newList := make([]T, 0)
-	f := false
+	removedItems := make([]T, 0)
 	for _, item := range *l {
 		if checkRemoving(item) {
-			f = true
+			removedItems = append(removedItems, item)
 			continue
 		}
 		newList = append(newList, item)
 	}
 	*l = newList
-	if !f {
-		return fmt.Errorf("items not found")
+	if len(removedItems) == 0 {
+		return make([]T, 0), fmt.Errorf("items not found")
 	} else {
-		return nil
+		return removedItems, nil
 	}
 }
