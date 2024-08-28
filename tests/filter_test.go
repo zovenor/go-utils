@@ -1,8 +1,9 @@
 package tests
 
 import (
-	"github.com/zovenor/go-utils/filter"
 	"testing"
+
+	"github.com/zovenor/go-utils/filter"
 )
 
 type filterDeleteTestData struct {
@@ -72,6 +73,35 @@ func TestFilterDelete(t *testing.T) {
 			} else {
 				t.Fatalf("%v equal %v", deletedItems, td.DeletedItems)
 			}
+		}
+	}
+}
+
+func TestFilterDeleteByIndex(t *testing.T) {
+	testData := []struct {
+		ListItems             []string
+		ListItemsUponDeleting []string
+		Index                 int
+		DeletedItem           string
+	}{
+		{
+			ListItems:             []string{"string", "a", "wef", "qwerty"},
+			ListItemsUponDeleting: []string{"string", "wef", "qwerty"},
+			Index:                 1,
+			DeletedItem:           "a",
+		},
+	}
+	for _, td := range testData {
+		copiedList := append([]string(nil), td.ListItems...)
+		deletedItem, err := filter.RemoveItemByIndex(&td.ListItems, td.Index)
+		if err != nil {
+			t.Fatalf("filter delete by index error: %v", err)
+		}
+		if deletedItem != td.DeletedItem {
+			t.Fatalf("deleted item %v not equal %v", deletedItem, td.DeletedItem)
+		}
+		if !equalLists(td.ListItems, td.ListItemsUponDeleting) {
+			t.Fatalf("%v not equal %v", td.ListItems, copiedList)
 		}
 	}
 }
